@@ -60,5 +60,6 @@ print(f"Testing for y=2x, the integral between x={lower_bound} and "
       + f"{y_2x_integral}, in {y_2x_count} iterations.")
 
 
-""" This methods calls upon the input function twice, which is three times less than the 
-way the in-class method calls upon. """
+""" This methods calls upon the input function twice, whereas the in-class method 
+calls upon the input function three times. Therefore, this method reduces calling upon 
+the input function by a raito of 5/2 """
