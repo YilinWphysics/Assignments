@@ -1,4 +1,5 @@
 import numpy as np 
+import os
 
 from matplotlib import pyplot as plt 
 
@@ -91,6 +92,7 @@ plt.xlabel("x interval")
 plt.ylabel("Functions")
 plt.title("Comparison of the original function of log base 2 of x and \n the truncated Chebyshev polynomial expression of the function")
 plt.legend()
+plt.savefig("Question1a_compare_original_func_and_truncated_Cheb_poly.png")
 plt.show()
 
 print("The number of terms needed for an error tolerance of 1e-6 is " + str(max_index)) # prints the number of terms needed to achieve an input error tolerance 
@@ -111,6 +113,7 @@ plt.xlabel("x interval")
 plt.ylabel("Residuals")
 plt.title("Comparison of residuals from the truncated Chebyshev method and \n numpy.polyfit method")
 plt.legend()
+plt.savefig("Question1a_compare_truncated_Cheb_poly_and_numpy_polyfit_methods.png")
 plt.show()
 
 print('rms error for numpy.polyfit method is ',np.sqrt(np.mean((fit_linear-func)**2)),' with max error ',np.max(np.abs(fit_linear-func)))

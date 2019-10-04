@@ -42,6 +42,7 @@ plt.plot(time_flare, flux_prediction, ".r", label="Prediction")
 plt.xlabel("Time")
 plt.ylabel("Flux")
 plt.legend()
+plt.savefig("Question2a_Flux_vs_time_at_flare.png")
 plt.show()
 
 # note that when b=65 it is somewhat of a good prediction 
@@ -94,6 +95,7 @@ plt.plot(time_flare, exponential_func(time_flare, x0_new, b, C), label="Newton's
 plt.xlabel("Time")
 plt.ylabel("Flux")
 plt.legend()
+plt.savefig("Question2b_Flux_vs_time_at_flare_exponential_fit.png")
 plt.show()
 
 # comment: the guess is reasonable 
