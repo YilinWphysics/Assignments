@@ -27,31 +27,30 @@ def get_spectrum(pars,lmax=2000):
     return tt
 
 
-
-
 pars=np.asarray([65,0.02,0.1,0.05,2e-9,0.96])
 wmap=np.loadtxt('wmap_tt_spectrum_9yr_v5.txt')
 
 #plt.clf();
 #plt.errorbar(wmap[:,0],wmap[:,1],wmap[:,2],fmt='*')
 #plt.plot(wmap[:,0],wmap[:,1],'.')
-
 cmb=get_spectrum(pars)
 #plt.plot(cmb)
 #plt.show()
 
+
+
 ###### end of Prof. Sievers' code ######
 
-# defining chi-squared formula, equation taken from Lecture 4 notes 
 
 def chi_squared(empiracal_data, fit_data, err):
+    # defining chi-squared formula, equation taken from Lecture 4 notes 
     numerator=(empiracal_data-fit_data)**2
     denominator=err**2
     return numerator/denominator
 
-# removing the first two points in the cmb data: 
-cmb_data=cmb[2:len(wmap[:,0])+2]
-wmap_chi_squared=np.sum(chi_squared(wmap[:,1], cmb_data, wmap[:,2]))
+
+cmb_data=cmb[2:len(wmap[:,0])+2] # removing the first two points in the cmb data
+wmap_chi_squared=np.sum(chi_squared(wmap[:,1], cmb_data, wmap[:,2])) 
 print(wmap_chi_squared) 
 # this prints the value of 1588.2376465826746
 
