@@ -77,6 +77,7 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
         # when chi_squared is already small enough and reducing: 
         if chi_squared_new < chi_squared and np.abs(chi_squared_new-chi_squared) < convergence_criterion: 
             parameter=parameter_new.copy()
+            parameter = np.insert(parameter, 3, 0.05)
             print("The residuals are converging and meeting the " + str(convergence_criterion) + r", with $\chi^{2}$ of " + str(chi_squared_new) + "\n")
             gradient=Newton_gradient(get_spectrum, parameter)
             noise=np.diag(1/(err**2))
@@ -94,7 +95,6 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
             parameter=parameter_new.copy()
             lamb=lamb*lambda_decrease_factor
             gradient=Newton_gradient(fit_data, parameter)
-        parameter = np.insert(parameter, 3, 0.05)
         residual=np.matrix(residual).transpose()
         gradient=np.matrix(gradient)
         Newton_lhs=gradient.transpose()*np.diag(1/(err**2))*gradient 
@@ -121,19 +121,12 @@ pars=np.asarray([H0, wb_h2, wc_h2, As, slope_ppl])
 initial_tau=0.05
 pars=Newton_Levenberg_Marquardt(wmap[:,1], get_spectrum, pars, wmap[:,2])
 
-print("The optimized parameters are hte following: \n")
+print("The optimized parameters are the following: \n")
 print(f"Hubble constant, H0, is {pars[0]} with an error of {perr[0]}")
 print(f"Physical baryon density, wb_h2, is {pars[1]} with an error of {perr[1]}")
 print(f"Cold DM density, wc_h2, is {pars[2]} with an error of {perr[2]}")
 print(f"Primordial amplitude of fluctuations, As, is {pars[3]} with an error of {perr[3]}")
 print(f"Slope of primordial amplitude of fluctuations, slope_ppl, is {pars[4]} with an error of {perr[4]}")
-
-
-
-
-
-
-
 
 
 
