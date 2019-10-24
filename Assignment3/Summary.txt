@@ -1,0 +1,4 @@
+Question 1: 
+
+chi_square value is 1588.2376465826746
+
