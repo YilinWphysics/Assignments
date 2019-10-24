@@ -11,7 +11,7 @@ def get_spectrum(pars,lmax=2000):
     H0=pars[0]
     ombh2=pars[1]
     omch2=pars[2]
-    tau=0.001 
+    tau=0.05 
     As=pars[3] 
     ns=pars[4]
     pars=camb.CAMBparams()
@@ -47,21 +47,21 @@ length=len(wmap[:,0]) # length of wmap data (any column will do)
 
 def Newton_gradient(func, parameter):
     # defining gradient with respect to a speicific parameter for a given function; 
-    gradient=np.zeros(length, len(parameter)) # create zerio matrix
+    gradient=np.zeros([length, len(parameter)]) # create zerio matrix
     for i in range(len(parameter)):
         parameter_update=parameter.copy()
         dx=parameter_update[i]*0.001
         parameter_update[i]=parameter_update[i]+dx
-        func_left=func(parameter_update)
+        func_left=func(parameter_update)[2:length+2]
         parameter_update[i]=parameter_update[i]-2*dx
-        func_right=func(parameter_update)
+        func_right=func(parameter_update)[2:length+2]
         gradient[:,i]=(func_right-func_left)/(2*dx)
     return gradient
 
 
 convergence_criterion=1e-6 # common convergence criterion in ANSYS Fluent 
 lambda_increase_factor=1000
-lambda_increase_factor_small=500
+lambda_decrease_factor=500
 
 # defining Newton's method for when the residuals are already close to a minimum, i.e. already converging
 # and when the residuals are large and are diverging, the Levenberg–Marquardt algorithm is employed for steep descend 
@@ -69,13 +69,13 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
     lamb=0.001 #arbitrarily small 
     chi_squared=5000 #arbitrarily large
     gradient=Newton_gradient(fit_data, parameter)
-    parameter_new=parameter_copy()
+    parameter_new=parameter.copy()
     for i in range(max_ite):
-        guess=func(parameter_new)[2:len(empirical_data)+2] # because in the data, same reason as Q1, the first two data points are to be discarded 
+        guess=fit_data(parameter_new)[2:len(empirical_data)+2] # because in the data, same reason as Q1, the first two data points are to be discarded 
         residual=empirical_data-guess 
         chi_squared_new=np.sum((residual**2)/(err**2))
-        # when chi_square is already small enough and reducing: 
-        if chi_squared_new < chi_squared and np.abs(chi_squared_new-chi_square) < convergence_criterion: 
+        # when chi_squared is already small enough and reducing: 
+        if chi_squared_new < chi_squared and np.abs(chi_squared_new-chi_squared) < convergence_criterion: 
             parameter=parameter_new.copy()
             print("The residuals are converging and meeting the " + str(convergence_criterion) + r", with $\chi^{2}$ of " + str(chi_squared_new) + "\n")
             gradient=Newton_gradient(get_spectrum, parameter)
@@ -84,7 +84,7 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
             perr=np.sqrt(np.diag(pcov))
             break 
 
-        # when chi_square is diverging, increase lambda for steepest descend (Levenberg-Marquardt method)
+        # when chi_squared is diverging, increase lambda for steepest descend (Levenberg-Marquardt method)
         elif chi_squared_new > chi_squared: 
             print(r"$\chi^{2}$ diverging. Increase $\lambda$ by a factor of " + str(lambda_increase_factor) + "\n")
             lamb=lamb*lambda_increase_factor
@@ -92,17 +92,18 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
 
         else: 
             parameter=parameter_new.copy()
-            lamb=lamb*lambda_increase_factor_small
+            lamb=lamb*lambda_decrease_factor
             gradient=Newton_gradient(fit_data, parameter)
+        parameter = np.insert(parameter, 3, 0.05)
         residual=np.matrix(residual).transpose()
         gradient=np.matrix(gradient)
         Newton_lhs=gradient.transpose()*np.diag(1/(err**2))*gradient 
         lhs=Newton_lhs+np.diag(np.diag(Newton_lhs))*lamb
-        rhs=Newton_lhs/gradient*residual
+        rhs=gradient.transpose()*np.diag(1/(err**2))*residual
         dp=np.linalg.inv(lhs)*(rhs)
         for jj in range(parameter.size):
             parameter_new[jj]=parameter_new[jj]+dp[jj] # copied from class example Newton.py 
-        print ("At iteration " + str({j}), r"the $\chi^{2}$ is " + str(chi_squared) + "\n")
+        print ("At iteration " + str({jj}), r"the $\chi^{2}$ is " + str(chi_squared) + "\n")
     return parameter, pcov, perr 
 
 
@@ -116,8 +117,18 @@ slope_ppl=0.96
 
 
 
-initial_values=np.asarray([H0, wb_h2, wc_h2, As, slope_ppl])
-initial_tau=np.array([0.001])
+pars=np.asarray([H0, wb_h2, wc_h2, As, slope_ppl])
+initial_tau=0.05
+pars=Newton_Levenberg_Marquardt(wmap[:,1], get_spectrum, pars, wmap[:,2])
+
+print("The optimized parameters are hte following: \n")
+print(f"Hubble constant, H0, is {pars[0]} with an error of {perr[0]}")
+print(f"Physical baryon density, wb_h2, is {pars[1]} with an error of {perr[1]}")
+print(f"Cold DM density, wc_h2, is {pars[2]} with an error of {perr[2]}")
+print(f"Primordial amplitude of fluctuations, As, is {pars[3]} with an error of {perr[3]}")
+print(f"Slope of primordial amplitude of fluctuations, slope_ppl, is {pars[4]} with an error of {perr[4]}")
+
+
 
 
 
