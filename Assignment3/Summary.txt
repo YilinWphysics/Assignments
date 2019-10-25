@@ -82,4 +82,7 @@ Primordial amplitude of fluctuations, As, is 2.69876105905515e-09 with an error 
 Slope of primordial amplitude of fluctuations, slope_ppl, is 1.017393987970007 with an error of 0.016200275255852725
 
 
-In conclusion, using the importance sampling by weighting the data with a Gaussian distribution (Question 4 part 2) brings the results in Q3 closer to that obtained in part 1, which is gotten by restricting the range of tau to the given value, 0.0544 \pm 1 sigma (0.0073).
+In conclusion, using the importance sampling by weighting the data with a Gaussian 
+distribution (Question 4 part 2) brings the results in Q3 closer to that obtained 
+in part 1, which is gotten by restricting the range of tau to the given value, 
+0.0544 \pm 1 sigma (0.0073).
