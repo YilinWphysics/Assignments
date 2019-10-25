@@ -62,8 +62,4 @@ for i in range(nstep):
     file.write(f"{chisq} \n")
     file.flush()
 file.close()
-    
-#fit_params=np.mean(chains_new,axis=0)
-
-
 
