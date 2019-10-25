@@ -3,10 +3,11 @@
 import numpy as np
 import camb
 from matplotlib import pyplot as plt
+from wmap_camb_example import wmap, get_spectrum
 import time
 
 
-def get_spectrum(pars,lmax=2000):
+def get_spectrum_fixed_tau(pars,lmax=1500):
     #print('pars are ',pars)
     H0=pars[0]
     ombh2=pars[1]
@@ -50,16 +51,16 @@ def Newton_gradient(func, parameter):
     gradient=np.zeros([length, len(parameter)]) # create zerio matrix
     for i in range(len(parameter)):
         parameter_update=parameter.copy()
-        dx=parameter_update[i]*0.001
+        dx=parameter_update[i]*0.01
         parameter_update[i]=parameter_update[i]+dx
         func_left=func(parameter_update)[2:length+2]
         parameter_update[i]=parameter_update[i]-2*dx
         func_right=func(parameter_update)[2:length+2]
-        gradient[:,i]=(func_right-func_left)/(2*dx)
+        gradient[:,i]=(func_left-func_right)/(2*dx)
     return gradient
 
 
-convergence_criterion=1e-6 # common convergence criterion in ANSYS Fluent 
+convergence_criterion=1e-3 # common convergence criterion in ANSYS Fluent 
 lambda_increase_factor=1000
 lambda_decrease_factor=500
 
@@ -78,7 +79,7 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
         if chi_squared_new < chi_squared and np.abs(chi_squared_new-chi_squared) < convergence_criterion: 
             parameter=parameter_new.copy()
             parameter = np.insert(parameter, 3, 0.05)
-            print("The residuals are converging and meeting the " + str(convergence_criterion) + r", with $\chi^{2}$ of " + str(chi_squared_new) + "\n")
+            print("The residuals are converging and meeting the convergence criterion of " + str(convergence_criterion) + r", with $\chi^{2}$ of " + str(chi_squared_new) + "\n")
             gradient=Newton_gradient(get_spectrum, parameter)
             noise=np.diag(1/(err**2))
             pcov=np.linalg.inv(np.dot(np.dot(gradient.transpose(), noise), gradient)) # definition of a covariance matrix 
@@ -95,15 +96,16 @@ def Newton_Levenberg_Marquardt(empirical_data, fit_data, parameter, err, max_ite
             parameter=parameter_new.copy()
             lamb=lamb*lambda_decrease_factor
             gradient=Newton_gradient(fit_data, parameter)
+            chi_squared=chi_squared_new
         residual=np.matrix(residual).transpose()
         gradient=np.matrix(gradient)
-        Newton_lhs=gradient.transpose()*np.diag(1/(err**2))*gradient 
+        Newton_lhs=gradient.transpose()@np.diag(1/(err**2))@gradient 
         lhs=Newton_lhs+np.diag(np.diag(Newton_lhs))*lamb
-        rhs=gradient.transpose()*np.diag(1/(err**2))*residual
-        dp=np.linalg.inv(lhs)*(rhs)
+        rhs=gradient.transpose()@np.diag(1/(err**2))@residual
+        dp=np.linalg.inv(lhs)@(rhs)
         for jj in range(parameter.size):
             parameter_new[jj]=parameter_new[jj]+dp[jj] # copied from class example Newton.py 
-        print ("At iteration " + str({jj}), r"the $\chi^{2}$ is " + str(chi_squared) + "\n")
+        print ("At iteration " + str({i}), r"the $\chi^{2}$ is " + str(chi_squared) + "\n")
     return parameter, pcov, perr 
 
 
@@ -118,15 +120,17 @@ slope_ppl=0.96
 
 
 pars=np.asarray([H0, wb_h2, wc_h2, As, slope_ppl])
-initial_tau=0.05
-pars=Newton_Levenberg_Marquardt(wmap[:,1], get_spectrum, pars, wmap[:,2])
+pars,pcov,perr=Newton_Levenberg_Marquardt(wmap[:,1], get_spectrum_fixed_tau, pars, wmap[:,2])
 
 print("The optimized parameters are the following: \n")
 print(f"Hubble constant, H0, is {pars[0]} with an error of {perr[0]}")
 print(f"Physical baryon density, wb_h2, is {pars[1]} with an error of {perr[1]}")
 print(f"Cold DM density, wc_h2, is {pars[2]} with an error of {perr[2]}")
-print(f"Primordial amplitude of fluctuations, As, is {pars[3]} with an error of {perr[3]}")
-print(f"Slope of primordial amplitude of fluctuations, slope_ppl, is {pars[4]} with an error of {perr[4]}")
+print(f"Optical depth, tau, is {pars[3]} with an error of {perr[3]}")
+print(f"Primordial amplitude of fluctuations, As, is {pars[4]} with an error of {perr[4]}")
+print(f"Slope of primordial amplitude of fluctuations, slope_ppl, is {pars[5]} with an error of {perr[5]}")
+
+print(pcov)
 
 
 

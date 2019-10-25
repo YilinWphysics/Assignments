@@ -2,3 +2,84 @@ Question 1:
 
 chi_square value is 1588.2376465826746
 
+
+=========================
+
+Question 2: 
+
+At iteration {0} the $\chi^{2}$ is 1588.3060461022
+
+At iteration {1} the $\chi^{2}$ is 1265.0865625225372
+
+At iteration {2} the $\chi^{2}$ is 1264.79540596316
+
+The residuals are converging and meeting the convergence criterion of 0.001, with $\chi^{2}$ of 1264.7948256780742
+
+The optimized parameters are the following: 
+
+Hubble constant, H0, is 68.47067708931702 with an error of 3.668784075832956
+Physical baryon density, wb_h2, is 0.020799768106194452 with an error of 0.0008089509242030781
+Cold DM density, wc_h2, is 0.10409842143500157 with an error of 0.006800590855212173
+Optical depth, tau, is 0.05 with an error of 0.1442354033206102
+Primordial amplitude of fluctuations, As, is 1.9640326674968783e-09 with an error of 5.516106321902398e-10
+Slope of primordial amplitude of fluctuations, slope_ppl, is 0.9605686808522195 with an error of 0.025413099001050432
+[[ 1.34599766e+01  2.27429191e-03 -2.33134798e-02  3.88034261e-01
+   1.41048208e-09  8.08997413e-02]
+ [ 2.27429191e-03  6.54401598e-07 -3.01065452e-06  8.64332826e-05
+   3.33455835e-13  1.88420375e-05]
+ [-2.33134798e-02 -3.01065452e-06  4.62480360e-05 -6.32838818e-04
+  -2.21981708e-12 -1.24799929e-04]
+ [ 3.88034261e-01  8.64332826e-05 -6.32838818e-04  2.08038516e-02
+   7.93466765e-11  3.08761209e-03]
+ [ 1.41048208e-09  3.33455835e-13 -2.21981708e-12  7.93466765e-11
+   3.04274290e-19  1.17274721e-11]
+ [ 8.08997413e-02  1.88420375e-05 -1.24799929e-04  3.08761209e-03
+   1.17274721e-11  6.45825601e-04]]
+
+
+
+=============
+
+Question 3: 
+
+Hubble constant, H0, is 75.01729938201164 with an error of 3.155469897088377
+Physical baryon density, wb_h2, is 0.023739814585305802 with an error of 0.000598152384572918
+Cold DM density, wc_h2, is 0.10509412119667305 with an error of 0.005787774884068438
+Optical depth, tau, is 0.1970881007668679 with an error of 0.01749319699575609
+Primordial amplitude of fluctuations, As, is 2.6987116796325566e-09 with an error of 6.808721994559537e-11
+Slope of primordial amplitude of fluctuations, slope_ppl, is 1.0168506814290175 with an error of 0.016059465393859704
+
+The MCMC chains and MCMC FFT are saved in two png files. 
+
+Convergence can be observed as both the chains and FFT are characteristic of white noise. 
+
+
+
+===================
+
+Question 4: 
+
+(part 1)
+
+The optimized parameters are the following: 
+
+Hubble constant, H0, is 69.5723927688849 with an error of 1.930028730953278
+Physical baryon density, wb_h2, is 0.022278259389459654 with an error of 0.0005370630392437663
+Cold DM density, wc_h2, is 0.11155170254248906 with an error of 0.0037669279297574735
+Optical depth, tau, is 0.055273070575258904 with an error of 0.004236691160222387
+Primordial amplitude of fluctuations, As, is 2.0452469402771607e-09 with an error of 3.979349860195852e-11
+Slope of primordial amplitude of fluctuations, slope_ppl, is 0.9661181770746733 with an error of 0.01284353203719929 
+ 
+ (part 2)
+
+The optimized parameters with the data from Q3 and weighting with a Gaussian distribution are the following: 
+
+Hubble constant, H0, is 75.0950867458834 with an error of 3.2634530727812043
+Physical baryon density, wb_h2, is 0.02374573549309933 with an error of 0.000607581556562934
+Cold DM density, wc_h2, is 0.10506616089747482 with an error of 0.006009105076012774
+Optical depth, tau, is 0.1969502338836095 with an error of 0.01829234156797152
+Primordial amplitude of fluctuations, As, is 2.69876105905515e-09 with an error of 7.123388160588752e-11
+Slope of primordial amplitude of fluctuations, slope_ppl, is 1.017393987970007 with an error of 0.016200275255852725
+
+
+In conclusion, using the importance sampling by weighting the data with a Gaussian distribution (Question 4 part 2) brings the results in Q3 closer to that obtained in part 1, which is gotten by restricting the range of tau to the given value, 0.0544 \pm 1 sigma (0.0073).
