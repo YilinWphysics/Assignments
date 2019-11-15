@@ -139,9 +139,8 @@ for i in range(len(strain_H)):
 	plt.semilogy(freq, noise_L)
 	plt.ylabel("Power spectrum in Livingston")
 	plt.xlabel("Frequency (Hz)")
-	plt.show()
 	plt.savefig(f"Q1a_noise_model_{name[i]}.png")
-
+	plt.clf()
 
 
 
@@ -159,9 +158,8 @@ for i in range(len(strain_H)):
 	plt.plot(time, m_L)
 	plt.ylabel("Match filter signal for \n Livingston")
 	plt.xlabel("Time (sec)")
-	plt.show()
 	plt.savefig(f"Q1b_match_filter_signal_{name[i]}.png")
-
+	plt.clf()
 
 
 	####################  Part (c) ####################
@@ -183,8 +181,8 @@ for i in range(len(strain_H)):
 	plt.plot(time, SNR_combined)
 	plt.ylabel("Signal-to-noise \n combined")
 	plt.xlabel("Time (sec)")
-	plt.show()
 	plt.savefig(f"Q1c_signal_to_noise_{name[i]}.png")
+	plt.clf()
 
 	####################  Part (d) ####################
 	analytic_SNR_combined=HL_combined_SNR(SNR_H, SNR_L)
@@ -204,9 +202,9 @@ for i in range(len(strain_H)):
 	plt.plot(time, analytic_SNR_combined)
 	plt.ylabel("Analytic_signal-to-noise \n combined")
 	plt.xlabel("Time (sec)")
-	plt.show()
 	plt.savefig(f"Q1d_analytic_signal_to_noise_{name[i]}.png")
-
+	plt.clf()
+	
 	####################  Part (e) ####################
 	print(name[i])
 	print("------------")

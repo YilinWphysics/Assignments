@@ -1,0 +1,19 @@
+(a) 
+A gaussian model was used to filter the noise. The start and end of the strain must be 0 to enable proper fft, hence a cosine window was used (however, any other function that allows start and end being 0 will do). The result plots are saved in .png formats.
+
+(b) 
+Result plots are shown in .png formats. 
+
+(c)
+The signal-to-noise ratio of (SNR) individual detectors in Livingston and in Hanford, as well as the combined L+H, are shown in .png formats. 
+
+(d) 
+The results approximately line up but not at the exact same time value (sec), and the peak is not perfectly symmetrical. A proposed reason is that the noise might not be perfect Gaussian stationary noise. 
+
+(e) 
+Results are printed in separate text file. 
+
+(f)
+Results are printed in separate text file. 
+The fitting method was that of a Gaussian, with the specifics of sigma=0.0005 (arbitrary value). The total error was calculated by difference in time ("delta_time" in code) * c (speed of light in vacuum) / distance (arbitrarily assigned as 1e6 m). 
+
