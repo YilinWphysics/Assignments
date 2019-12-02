@@ -1,0 +1,21 @@
+###############Question 1################## 
+The numerical method with the relaxation technique takes 9078 number of iterations to converge. 
+The line charge density lambda on the ring is 0.0. 
+The numerical and analytical method yield similar results. But it should be bear in mind that the analytical method should be taken 
+with a grain of salt as the grid box is square and the source is circular, therefore the boundary condition of 0 cannot be properly met. ###############Question 2################## 
+The numerical method with the analytical technique takes 68 number of iterations to converge. 
+It is obvious that the conjugate gradient method is much faster than the relaxation method in Q1 - 
+ this new method takes a lot fewer steps to reach the same convergence criterion.
+ ###############Question 3################## 
+A total steps of 142 is taken to reach the same convergence criterion. 
+
+ ###############Question 4################## 
+A total steps of 142 is taken to reach the same convergence criterion. 
+There should be disturbance in the field after the addition of the bump, 10 percent of the wire diameter. 
+However, the disturbance is not that obvious just by a quick observation with the naked eyes.
+
+ ###############Question 4################## 
+Using the 1D Neumann for heat transfer, the heat curves are plotted shown in the saved figure for Q5. 
+There are indeed constants that need to be set. 
+In order to make the solution converge properly, it must be that k * dt / (dx**2) <= 0.5 
+For this calculation, these values are chosen as dt=0.001, dx=0.001, and k=0.00025 to satisfy the aforementioned inequality.
