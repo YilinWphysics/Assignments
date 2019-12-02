@@ -14,7 +14,7 @@ A total steps of 142 is taken to reach the same convergence criterion.
 There should be disturbance in the field after the addition of the bump, 10 percent of the wire diameter. 
 However, the disturbance is not that obvious just by a quick observation with the naked eyes.
 
- ###############Question 4################## 
+ ###############Question 5################## 
 Using the 1D Neumann for heat transfer, the heat curves are plotted shown in the saved figure for Q5. 
 There are indeed constants that need to be set. 
 In order to make the solution converge properly, it must be that k * dt / (dx**2) <= 0.5 

@@ -406,7 +406,7 @@ plt.legend()
 plt.savefig("Q5_heat_curves_Newmann_Robin.png")
 plt.show()
 
-summary.write("\n ###############Question 4################## \n")
+summary.write("\n ###############Question 5################## \n")
 summary.write("Using the 1D Neumann for heat transfer, the heat curves are plotted shown in the saved figure for Q5. \n")
 summary.write("There are indeed constants that need to be set. \n")
 summary.write(f"In order to make the solution converge properly, it must be that k * dt / (dx**2) <= 0.5 \n")
