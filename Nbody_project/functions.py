@@ -19,7 +19,7 @@ notes taken from: https://rein.utsc.utoronto.ca/teaching/PSCB57_notes_lecture10.
 
 
 class Particles(): 
-    def __init__(self, mass, v_x, v_y, nparticles, grid_size, soften, orbit = False): 
+    def __init__(self, mass, v_x, v_y, nparticles, grid_size, soften, orbit = False, bc_periodic = True, early_uni = False): 
         """
         mass (array): mass of particle
         p_x (array): x-component of the particle's velocity  
@@ -31,17 +31,20 @@ class Particles():
             to be soften, to avoid infinity when divided by in the Green function calculation 
         a (array): acceleration, [0] in x and [1] in y 
         """
-        self.mass = mass 
-        v_x = np.ones(nparticles) * v_x
-        v_y = np.ones(nparticles) * v_y
+        self.mass = np.ones(nparticles)*mass 
+        self.v_x = np.ones(nparticles) * v_x
+        self.v_y = np.ones(nparticles) * v_y
         self.v = np.array([v_x, v_y]).transpose()
         self.nparticles = nparticles 
         self.grid_size = grid_size
         self.soften = soften
+        self.bc = bc_periodic
         if orbit ==False:
             self.initial_loc()
         else:
             self.initial_orbit()
+        if early_uni == True: 
+            self.mass_early_uni()
         self.hist_2d()
         self.Green_func()
         self.a = np.zeros([nparticles, 2])
@@ -68,11 +71,14 @@ class Particles():
         i_loc (int): x- and y-location of particle, rounded off to nearest integer 
         grid (array): density of particle on grid of size grid_size * grid_size 
         """
-        self.grid = np.zeros([self.grid_size,self.grid_size])
+        if self.bc == True:
+            self.grid = np.zeros([self.grid_size,self.grid_size])
+        else:
+            self.grid = np.zeros([2*self.grid_size,2*self.grid_size])
         self.i_loc=np.asarray(np.round(self.loc),dtype='int')
         n=self.loc.shape[0]
         for i in range(n):
-            self.grid[self.i_loc[i,0],self.i_loc[i,1]]+=self.mass
+            self.grid[self.i_loc[i,0],self.i_loc[i,1]]+=self.mass[i]
 
     def Green_func(self): 
         """
@@ -81,7 +87,11 @@ class Particles():
         radius (float): distance from a grid point to the origin 
         Green (array): calculate Green function at each grid point 
         """
-        self.Green = np.zeros([self.grid_size, self.grid_size])
+        if self.bc == True:
+            size = self.grid_size
+        else:
+            size = 2*self.grid_size
+        self.Green = np.zeros([size, size])
         for x in range(len(self.Green[0])):
             for y in range(len(self.Green[1])):
                 radius = np.sqrt(x**2 + y**2) 
@@ -89,8 +99,8 @@ class Particles():
                     radius = self.soften
                 self.Green[x, y]=1/(4 * np.pi * radius)
         if self.grid_size%2 == 0: 
-            self.Green[: self.grid_size//2, self.grid_size//2 : ] = np.flip(self.Green[: self.grid_size//2, : self.grid_size//2], axis = 1) # an intermittent step - the original grid has only been flipped once (2 x the original size)
-            self.Green[ self.grid_size//2 : , :] = np.flip(self.Green[: self.grid_size//2, :], axis = 0)
+            self.Green[: size//2, size//2 : ] = np.flip(self.Green[: size//2, : size//2], axis = 1) # an intermittent step - the original grid has only been flipped once (2 x the original size)
+            self.Green[ size//2 : , :] = np.flip(self.Green[: size//2, :], axis = 0)
         else: 
             print("Exiting - Grid size is currently odd. Pleaset set to an even value.")
 
@@ -101,6 +111,7 @@ class Particles():
         self.phi = np.real(np.fft.ifft2(np.fft.fft2(self.Green)*np.fft.fft2(self.grid)))
         self.phi = 0.5 * (np.roll(self.phi, 1, axis = 1) + self.phi)
         self.phi = 0.5 * (np.roll(self.phi, 1, axis = 0) +self.phi)
+
 
     def force(self):
         """
@@ -121,8 +132,24 @@ class Particles():
         self.force()
         self.take_one_step(dt)
         for i in range(self.nparticles):
-            self.a[i]= np.array([self.force_x[self.i_loc[i,0],self.i_loc[i,1]] / self.mass, self.force_y[self.i_loc[i,0],self.i_loc[i,1]]/self.mass])
+            self.a[i]= np.array([self.force_x[self.i_loc[i,0],self.i_loc[i,1]] / self.mass[i], self.force_y[self.i_loc[i,0],self.i_loc[i,1]]/self.mass[i]])
         self.hist_2d()
 
+    def energy(self): 
+        """
+        Recall that energy is potential energy (-GMm/r, which is - phi) + kinetic energy (mv**2/2)
+        """
+        self.E = - np.sum(self.phi) + 0.5 * self.mass * np.sqrt((self.v_x ** 2 + self.v_y **2))
+
+    def mass_early_uni(self): 
+        """
+        k (array): Fourier transform of x 
+        """
+        x = self.loc[:,0]
+        y = self.loc[:,1]
+        fft_x_sq = (np.real(np.fft.fft(x)))**2
+        fft_y_sq = (np.real(np.fft.fft(y)))**2
+        self.k = np.sqrt(fft_x_sq + fft_y_sq)
+        self.mass = self.mass * (self.k**(-3))
 
 

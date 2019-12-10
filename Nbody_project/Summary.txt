@@ -1,2 +1,15 @@
 ################### Question 1 ##################### 
 As shown in the animation, the particle behaviour is stationary. 
+
+################### Question 2 ##################### 
+It can be observed from the git that the two masses remain in orbit around each other. 
+
+################### Question 3 ##################### 
+As shown from the two txt files into which the energy (E) values are saved, energy is conserved for the periodic and the non-periodic condition, as for each file the energy remains the same in all iterations. 
+Please ignore that fact that for each iteration, the energy is saved into an array. This is because in the function.py the mass that used to be a float was defined as an array in __init__ when the function mass_early_uni was defined. 
+
+Please refer to the periodic and non-periodic gifs for animation of the 2e5 masses' evolution with time. 
+
+################### Question 4 ##################### 
+Please refer to the periodic gif for animation of the 2e5 masses' evolution with time.
+It can be observed that the masses cluster to some specific locations, due to initial higher density. 

@@ -1,7 +1,7 @@
 from functions import * 
 
 
-summary = open("Summary.txt", "w")
+# summary = open("Summary.txt", "w")
 
 
 ################### Question 1 ####################
@@ -28,8 +28,8 @@ gif.save("Question1.gif", writer = "imagemagick")
 
 
 
-summary.write("################### Question 1 ##################### \n")
-summary.write("As shown in the animation, the particle behaviour is stationary. \n")
+# summary.write("################### Question 1 ##################### \n")
+# summary.write("As shown in the animation, the particle behaviour is stationary. \n")
 
 
 
